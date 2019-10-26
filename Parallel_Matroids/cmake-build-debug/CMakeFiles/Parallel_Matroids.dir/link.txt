@@ -1,0 +1,1 @@
+/usr/bin/cc -g  -Wl,--enable-auto-import CMakeFiles/Parallel_Matroids.dir/main.c.o  -o Parallel_Matroids.exe -Wl,--out-implib,libParallel_Matroids.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
