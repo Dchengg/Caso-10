@@ -1,4 +1,4 @@
-# Install script for directory: /cygdrive/c/Users/Diego/Documents/GitHub/Caso-10/Parallel_Matroids
+# Install script for directory: /cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/cygdrive/c/Users/Diego/Documents/GitHub/Caso-10/Parallel_Matroids/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

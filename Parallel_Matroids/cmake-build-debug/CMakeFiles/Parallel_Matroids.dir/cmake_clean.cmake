@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Parallel_Matroids.dir/main.c.o"
-  "Parallel_Matroids.pdb"
   "Parallel_Matroids.exe"
+  "Parallel_Matroids.pdb"
   "libParallel_Matroids.dll.a"
 )
 
