@@ -1,0 +1,3 @@
+/cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids/cmake-build-debug/CMakeFiles/Parallel_Matroids.dir
+/cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids/cmake-build-debug/CMakeFiles/edit_cache.dir
