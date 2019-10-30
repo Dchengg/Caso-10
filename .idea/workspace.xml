@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="Parallel_Matroids" targetName="test" />
       <config projectName="Parallel_Matroids" targetName="Parallel_Matroids" />
     </generated>
   </component>
@@ -28,7 +29,13 @@
   <component name="ProjectId" id="1SrPpi98xwOOSqdirxkfrYnkcoe" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Parallel_Matroids/CMakeLists.txt" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../TEC/2019/Semestre II/Algoritmos/Caso 10" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Mau\Documents\Github\Caso 10\Caso-10\Parallel_Matroids" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -42,12 +49,21 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="CMake Application.Parallel_Matroids">
     <configuration name="Parallel_Matroids" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Parallel_Matroids" TARGET_NAME="Parallel_Matroids" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Parallel_Matroids" RUN_TARGET_NAME="Parallel_Matroids">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Parallel_Matroids" TARGET_NAME="test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Parallel_Matroids" RUN_TARGET_NAME="test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.Parallel_Matroids" />
+      <item itemvalue="CMake Application.test" />
+    </list>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -59,7 +75,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1572318927634</updated>
-      <workItem from="1572318932266" duration="336000" />
+      <workItem from="1572318932266" duration="6433000" />
+      <workItem from="1572387243568" duration="8016000" />
     </task>
     <servers />
   </component>
@@ -71,7 +88,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
