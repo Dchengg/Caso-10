@@ -90,7 +90,7 @@ void** apply_Matroid(struct Matroid matroid){
 
     else if(matroid.t == INT){
         int *arr = (int*) (matroid.S);
-        for(loop = 0; loop < matroid.sizeS;loop++){
+        for(loop = 0; loop < matroid.sizeS; loop++){
             if(matroid.function(arr[loop])){
                 solution[position] = ((int*)(matroid.S))[loop];
                 position++;
@@ -99,9 +99,9 @@ void** apply_Matroid(struct Matroid matroid){
     }
 
     else if(matroid.t == DOUBLE){
-        double *arr = (double*) (matroid.S);
-        for(loop = 0; loop < matroid.sizeS;loop++){
-            if(matroid.function(calloc(arr[loop], sizeof(double)))){
+        double *arr = &matroid.S;
+        for(loop = 0; loop < matroid.sizeS; loop++){
+            if(matroid.function(calloc(arr[loop], sizeof(int)))){
                 solution[position] = ((int*)(matroid.S))[loop];
                 position++;
             }
@@ -111,28 +111,59 @@ void** apply_Matroid(struct Matroid matroid){
     return solution;
 }
 
-void iterate(){
+void resolve(){
     for(int element = 0; element < counter; element++){
-        #pragma omp parallel for
+        //#pragma omp parallel for
         struct Matroid matroid = matroids[element];
         void **solution = apply_Matroid(matroid);
         int loop;
-        for(loop = 0; loop < matroid.sizeS; loop++)
+        for(loop = 0; loop < matroid.sizeS; loop++){
             if(matroid.t == POINTER_TO_CHAR){
                 char* str = ((char**)(solution))[loop];
                 if((int) str != 0xa){
-                    printf("%s", str);
-                    printf("\n");
+                    printf("%s \n", str);
                 }
             }
             else if (matroid.t == INT){
-                printf("%d",(solution)[loop]);
-                printf("\n");
+                printf("%d \n",(solution)[loop]);
             }
             else if (matroid.t == DOUBLE){
-                printf("%lf", (solution)[loop]);
-                printf("\n");
+                printf("%lf \n", (solution)[loop]);
             }
+        }
+    }
+}
+
+struct Matroid getMatroid(void *Sp, void *Ip, enum type tp, int size, bool(*functionp)(void*)){
+    struct Matroid m;
+    m.S = Sp;
+    m.I = Ip;
+    m.t = tp;
+    m.sizeS = size;
+    m.function = functionp;
+    return m;
+}
+
+void resolveArrayMatroid(struct Matroid matroidsArray[], int size){
+    for(int element = 0; element < size; element++){
+        #pragma omp parallel for
+        {
+            struct Matroid matroid = matroidsArray[element];
+            void **solution = apply_Matroid(matroid);
+            int loop;
+            for(loop = 0; loop < matroid.sizeS; loop++){
+                if(matroid.t == POINTER_TO_CHAR){
+                    char* str = ((char**)(solution))[loop];
+                    if((int) str != 0xa){
+                        printf("%s \n", str);
+                    }
+                }
+                else if (matroid.t == INT){
+                    printf("%d \n",(solution)[loop]);
+                }
+            }
+            //printf("Thread rank: %d\n", omp_get_thread_num());
+        }
     }
 }
 
