@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <omp.h>
+#include <time.h>
 
 #define typename(x) _Generic((x),                           \
         _Bool: BOOL,                                        \
@@ -145,9 +146,15 @@ struct Matroid getMatroid(void *Sp, void *Ip, enum type tp, int size, bool(*func
 }
 
 void resolveArrayMatroid(struct Matroid matroidsArray[], int size){
+    /*int target_thread_num = 10;
+    omp_set_num_threads(target_thread_num);
+    unsigned long times[target_thread_num];*/
+
     for(int element = 0; element < size; element++){
         #pragma omp parallel for
         {
+            int thread_id = omp_get_thread_num();
+            //times[thread_id] = clock();
             struct Matroid matroid = matroidsArray[element];
             void **solution = apply_Matroid(matroid);
             int loop;
@@ -162,7 +169,9 @@ void resolveArrayMatroid(struct Matroid matroidsArray[], int size){
                     printf("%d \n",(solution)[loop]);
                 }
             }
-            //printf("Thread rank: %d\n", omp_get_thread_num());
+            printf("Thread rank: %d\n", thread_id);
+            /*printf("Thread number: %d", omp_get_thread_num());
+            times[thread_id] = clock();*/
         }
     }
 }
