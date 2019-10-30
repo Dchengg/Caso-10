@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <omp.h>
 
 #define typename(x) _Generic((x),                           \
         _Bool: BOOL,                                        \
@@ -58,7 +59,7 @@ typedef struct Matroid{
     bool (*function)(void*);
 } matrix;       // Structure for the matroid
 
-struct Matroid matroids[3];
+struct Matroid matroids[];
 
 static int counter = 0;     // Index of matroid in array
 
@@ -67,50 +68,41 @@ void generateMatroid(void *Sp, void *Ip, enum type tp, int size, bool(*functionp
     m.S = Sp;
     m.I = Ip;
     m.t = tp;
-    //m.sizeS = (int)(sizeof(Sp) / sizeof(Sp[0]));
     m.sizeS = size;
     m.function = functionp;
     matroids[counter] = m;
     counter++;
-    //printf("%d", m.sizeS);
 }
 
-/*
-void iterate(){
-    for(int element = 0; element < counter; element++){
-        struct Matroid matroid = matroids[element];
-        void **solution = apply_Matroid(matroid.S, matroid.sizeS, matroid.t,matroid.function);
-        printf("\n");
-        int loop;
-        for(loop = 0; loop < 3; loop++)
-            if(matroid.t == STRING){
-                char* str = ((char**)(solution))[loop];
-                if(str != 0xa){
-                    printf("%s",str);
-                }
-
-            }else{
-                printf("%d",(solution)[loop]);
-            }
-
-    }
-}
-
-void** apply_Matroid(void* array[], int arraySize,enum type t, bool (*function)(void*)){
+void** apply_Matroid(struct Matroid matroid){
     static void* solution[3];
     int position = 0;
     int loop;
-    if(t == POINTER_TO_CHAR){
-        for(loop = 0; loop < arraySize;loop++){
-            if(function(((char**)(array))[loop])){
-                solution[position] = ((char**)(array))[loop];
+
+    if(matroid.t == POINTER_TO_CHAR){
+        for(loop = 0; loop < matroid.sizeS; loop++){
+            if(matroid.function(((char**)(matroid.S))[loop])){
+                solution[position] = ((char**)(matroid.S))[loop];
                 position++;
             }
         }
-    }else{
-        for(loop = 0; loop < arraySize;loop++){
-            if(function(((int*)(array))[loop])){
-                solution[position] = ((int*)(array))[loop];
+    }
+
+    else if(matroid.t == INT){
+        int *arr = (int*) (matroid.S);
+        for(loop = 0; loop < matroid.sizeS;loop++){
+            if(matroid.function(arr[loop])){
+                solution[position] = ((int*)(matroid.S))[loop];
+                position++;
+            }
+        }
+    }
+
+    else if(matroid.t == DOUBLE){
+        double *arr = (double*) (matroid.S);
+        for(loop = 0; loop < matroid.sizeS;loop++){
+            if(matroid.function(calloc(arr[loop], sizeof(double)))){
+                solution[position] = ((int*)(matroid.S))[loop];
                 position++;
             }
         }
@@ -119,5 +111,30 @@ void** apply_Matroid(void* array[], int arraySize,enum type t, bool (*function)(
     return solution;
 }
 
- */
+void iterate(){
+    for(int element = 0; element < counter; element++){
+        #pragma omp parallel for
+        struct Matroid matroid = matroids[element];
+        void **solution = apply_Matroid(matroid);
+        int loop;
+        for(loop = 0; loop < matroid.sizeS; loop++)
+            if(matroid.t == POINTER_TO_CHAR){
+                char* str = ((char**)(solution))[loop];
+                if((int) str != 0xa){
+                    printf("%s", str);
+                    printf("\n");
+                }
+            }
+            else if (matroid.t == INT){
+                printf("%d",(solution)[loop]);
+                printf("\n");
+            }
+            else if (matroid.t == DOUBLE){
+                printf("%lf", (solution)[loop]);
+                printf("\n");
+            }
+    }
+}
+
+
 #endif //PARALLEL_MATROIDS_MATROID_H
