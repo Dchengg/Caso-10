@@ -1,0 +1,8 @@
+C:\Users\Mau\.CLion2019.2\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" "/cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids"
+CMake Error at CMakeLists.txt:7 (set_target_properties):
+  set_target_properties called with illegal arguments, maybe missing a
+  PROPERTIES specifier?
+
+
+-- Configuring incomplete, errors occurred!
+See also "/cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids/cmake-build-debug/CMakeFiles/CMakeOutput.log".
