@@ -7,6 +7,8 @@
 #IncludeRegexTransform: 
 
 /cygdrive/c/Users/Mau/Documents/Github/Caso 10/Caso-10/Parallel_Matroids/test.c
+stdbool.h
+-
 stdio.h
 -
 

@@ -8,28 +8,6 @@
 #include <omp.h>
 #include <time.h>
 
-#define typename(x) _Generic((x),                           \
-        _Bool: BOOL,                                        \
-        unsigned char: UNSIGNED_CHAR,                       \
-        char: CHAR,                                         \
-        signed char: SIGNED_CHAR,                           \
-        short int: SHORT_INT,                               \
-        unsigned short int: UNSIGNED_SHORT_INT,             \
-        int: INT,                                           \
-        unsigned int: UNSIGNED_INT,                         \
-        long int: LONG_INT,                                 \
-        unsigned long int: UNSIGNED_LONG_INT,               \
-        long long int: LONG_LONG_INT,                       \
-        unsigned long long int: UNSIGNED_LONG_LONG_INT,     \
-        float: FLOAT,                                       \
-        double: DOUBLE,                                     \
-        long double: LONG_DOUBLE,                           \
-        char *: POINTER_TO_CHAR,                            \
-        void *: POINTER_TO_VOID,                            \
-        int *: POINTER_TO_INT,                              \
-        default: OTHER)
-
-
 enum type {
     BOOL,
     UNSIGNED_CHAR,
@@ -60,20 +38,14 @@ typedef struct Matroid{
     bool (*function)(void*);
 } matrix;       // Structure for the matroid
 
+struct Inter{
+    int iteration;
+    void *value;
+};
+
 struct Matroid matroids[];
 
 static int counter = 0;     // Index of matroid in array
-
-void generateMatroid(void *Sp, void *Ip, enum type tp, int size, bool(*functionp)(void*)){
-    struct Matroid m;
-    m.S = Sp;
-    m.I = Ip;
-    m.t = tp;
-    m.sizeS = size;
-    m.function = functionp;
-    matroids[counter] = m;
-    counter++;
-}
 
 void** apply_Matroid(struct Matroid matroid){
     static void* solution[3];
@@ -112,29 +84,6 @@ void** apply_Matroid(struct Matroid matroid){
     return solution;
 }
 
-void resolve(){
-    for(int element = 0; element < counter; element++){
-        //#pragma omp parallel for
-        struct Matroid matroid = matroids[element];
-        void **solution = apply_Matroid(matroid);
-        int loop;
-        for(loop = 0; loop < matroid.sizeS; loop++){
-            if(matroid.t == POINTER_TO_CHAR){
-                char* str = ((char**)(solution))[loop];
-                if((int) str != 0xa){
-                    printf("%s \n", str);
-                }
-            }
-            else if (matroid.t == INT){
-                printf("%d \n",(solution)[loop]);
-            }
-            else if (matroid.t == DOUBLE){
-                printf("%lf \n", (solution)[loop]);
-            }
-        }
-    }
-}
-
 struct Matroid getMatroid(void *Sp, void *Ip, enum type tp, int size, bool(*functionp)(void*)){
     struct Matroid m;
     m.S = Sp;
@@ -145,36 +94,99 @@ struct Matroid getMatroid(void *Sp, void *Ip, enum type tp, int size, bool(*func
     return m;
 }
 
-void resolveArrayMatroid(struct Matroid matroidsArray[], int size){
-    /*int target_thread_num = 10;
-    omp_set_num_threads(target_thread_num);
-    unsigned long times[target_thread_num];*/
-
-    for(int element = 0; element < size; element++){
-        #pragma omp parallel for
-        {
-            int thread_id = omp_get_thread_num();
-            //times[thread_id] = clock();
-            struct Matroid matroid = matroidsArray[element];
-            void **solution = apply_Matroid(matroid);
-            int loop;
-            for(loop = 0; loop < matroid.sizeS; loop++){
-                if(matroid.t == POINTER_TO_CHAR){
-                    char* str = ((char**)(solution))[loop];
-                    if((int) str != 0xa){
-                        printf("%s \n", str);
-                    }
-                }
-                else if (matroid.t == INT){
-                    printf("%d \n",(solution)[loop]);
+void resolveArrayMatroid(struct Matroid matroidsArray[], int size) {
+    for (int element = 0; element < size; element++) {
+        struct Matroid matroid = matroidsArray[element];
+        void **solution = apply_Matroid(matroid);
+        int loop;
+        for (loop = 0; loop < matroid.sizeS; loop++) {
+            if (matroid.t == POINTER_TO_CHAR) {
+                char *str = ((char **) (solution))[loop];
+                if ((int) str != 0xa) {
+                    printf("%s \n", str);
                 }
             }
-            printf("Thread rank: %d\n", thread_id);
-            /*printf("Thread number: %d", omp_get_thread_num());
-            times[thread_id] = clock();*/
+            else if (matroid.t == INT) {
+                int result = (int) (solution)[loop];
+                if(result != 0) printf("%d \n", result);
+            }
+        }
+    }
+    printf("fs");
+}
+
+bool contains(int array[], int size, int value){
+    for(int i = 0; i < size; i++){
+        if(array[i] == value) return true;
+    }
+    return false;
+}
+
+void validate(struct Inter intersection[], int counter, enum type t){
+    if(t == INT){
+        int solution[counter];
+        int solutionCounter = 0;
+        #pragma omp parallel for
+        for(int i = 0; i < counter; i++){
+            struct Inter current =  intersection[i];
+            int number = (int) current.value;
+            int iterations[counter];
+            int count = 0;
+            for(int j = 0; j < counter; j++){
+                if(number == (int)intersection[j].value){
+                    iterations[count] = intersection[j].iteration;
+                    count++;
+                }
+            }
+            if(contains(iterations, count, 0) && contains(iterations, count, 1) && contains(iterations, count, 2) &&
+                    contains(iterations, count, 3) && contains(iterations, count, 4) && contains(iterations, count, 5) &&
+                    contains(iterations, count, 6) && contains(iterations, count, 7) && contains(iterations, count, 8) &&
+                    contains(iterations, count, 9)){
+                if(!contains(solution, solutionCounter, number)){
+                    solution[solutionCounter] = number;
+                    solutionCounter++;
+                }
+            }
+        }
+        for(int i = 0; i < solutionCounter; i++){
+            printf("%d \n", solution[i]);
         }
     }
 }
+
+void intersect(struct Matroid matroidsArray[], int size, enum type t){
+    struct Inter intersection[100];
+    int counter = 0;
+    #pragma omp parallel for
+    for (int element = 0; element < size; element++) {
+        struct Matroid matroid = matroidsArray[element];
+        void **solution = apply_Matroid(matroid);
+        int loop;
+        for (loop = 0; loop < matroid.sizeS; loop++) {
+            if (matroid.t == POINTER_TO_CHAR) {
+                char *str = ((char **) (solution))[loop];
+                if ((int) str != 0xa && str != "(null)") {
+                    struct Inter temp;
+                    temp.iteration = element;
+                    temp.value = str;
+                    intersection[counter] = temp;
+                    counter++;
+                }
+            }
+            else if (matroid.t == INT) {
+                struct Inter temp;
+                temp.iteration = element;
+                temp.value = (solution)[loop];
+                if((int)temp.value != 0){
+                    intersection[counter] = temp;
+                    counter++;
+                }
+            }
+        }
+    }
+    validate(intersection, counter, t);
+}
+
 
 
 #endif //PARALLEL_MATROIDS_MATROID_H
