@@ -95,24 +95,25 @@ struct Matroid getMatroid(void *Sp, void *Ip, enum type tp, int size, bool(*func
 }
 
 void resolveArrayMatroid(struct Matroid matroidsArray[], int size) {
+    #pragma omp parallel for
     for (int element = 0; element < size; element++) {
+        printf("\n Resultado matroid %d: ", element);
         struct Matroid matroid = matroidsArray[element];
         void **solution = apply_Matroid(matroid);
         int loop;
         for (loop = 0; loop < matroid.sizeS; loop++) {
             if (matroid.t == POINTER_TO_CHAR) {
                 char *str = ((char **) (solution))[loop];
-                if ((int) str != 0xa) {
-                    printf("%s \n", str);
+                if ((int) str != NULL) {
+                    printf("%s ", str);
                 }
             }
             else if (matroid.t == INT) {
                 int result = (int) (solution)[loop];
-                if(result != 0) printf("%d \n", result);
+                if(result != 0) printf("%d ", result);
             }
         }
     }
-    printf("fs");
 }
 
 bool contains(int array[], int size, int value){
@@ -149,7 +150,7 @@ void validate(struct Inter intersection[], int counter, enum type t){
             }
         }
         for(int i = 0; i < solutionCounter; i++){
-            printf("%d \n", solution[i]);
+            printf("%d, ", solution[i]);
         }
     }
 }
@@ -186,7 +187,5 @@ void intersect(struct Matroid matroidsArray[], int size, enum type t){
     }
     validate(intersection, counter, t);
 }
-
-
 
 #endif //PARALLEL_MATROIDS_MATROID_H
